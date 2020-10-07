@@ -1,0 +1,16 @@
+[
+    {
+        "title": "VIPER",
+        "description": "Архитектурный паттерн",
+        "imageName": "pizz1",
+        "header": "Архитектуры",
+        "footer": "aaa"
+    },
+    {
+        "title": "MVVM",
+        "description": "Архитектурный паттерн",
+        "imageName": "pizz2",
+        "header": "",
+        "footer": "aaa"
+    }
+]
