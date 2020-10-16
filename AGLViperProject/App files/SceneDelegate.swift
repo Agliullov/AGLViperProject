@@ -16,19 +16,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let launchedBefore = UserDefaults.standard.object(forKey: "launchedBefore")
-        if launchedBefore == nil {
-            let startVC = StartPageViewController()
-            UserDefaults.standard.setValue(true, forKey: "launchedBefore")
-            let navigationController = UINavigationController(rootViewController: startVC)
-            window?.rootViewController = navigationController
-            window?.makeKeyAndVisible()
+        var startViewController: UIViewController!
+        
+        if let launchedBefore = UserDefaults.standard.object(forKey: "launchedBefore") as? Bool, launchedBefore {
+            startViewController = HomeScreenViewController()
         } else {
-            let mainVC = FirstViewController()
-            let navigationController = UINavigationController(rootViewController: mainVC)
-            window?.rootViewController = navigationController
-            window?.makeKeyAndVisible()
+            startViewController = SplashScreenPageViewController()
         }
+        
+        let navigationController = UINavigationController(rootViewController: startViewController)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

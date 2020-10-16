@@ -10,7 +10,6 @@ import Foundation
 class NetworkService {
     
     func getDataFromJSON<T: Codable>(fileName: String, response: @escaping ([T]?) -> Void) {
-        DispatchQueue.main.async {
             if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
                 do {
                     let data = try Data(contentsOf: url)
@@ -20,7 +19,6 @@ class NetworkService {
                     print("Failed to parse \(fileName).json")
                 }
             }
-        }
     }
     
     func decodeJSONData<T: Codable>(type: T.Type, from: Data?) -> T? {
