@@ -24,13 +24,14 @@ class RestaurantMenuPresenter {
     weak var viewController: RestaurantMenuDisplayLogic?
     
     private func getSection(options: [HomeScreenData]) -> [RestaurantMenuModel.DisplayedSection] {
-        var sections: [RestaurantMenuModel.DisplayedSection] = []
+        var cells: [RestaurantMenuModel.DisplayedSection.DisplayedCell] = []
         for option in options {
-            let descriptionCell = RestaurantMenuModel.DisplayedSection.DisplayedCell(type: .description(title: option.title, imageName: option.imageName, descriptionText: option.description, priceText: option.priceText))
-            let section = RestaurantMenuModel.DisplayedSection(type: .details, cells: [descriptionCell], header: option.header, footer: option.footer)
-            sections.append(section)
+            let descriptionCell = RestaurantMenuModel.DisplayedSection.DisplayedCell(type: .description(title: option.title, imageName: option.imageName, descriptionText: option.details, price: option.price, priceText: option.priceText))
+            cells.append(descriptionCell)
         }
-        return sections
+        
+        let section = RestaurantMenuModel.DisplayedSection(type: .details, cells: cells, header: "", footer: "")
+        return [section]
     }
 }
 
@@ -38,7 +39,6 @@ extension RestaurantMenuPresenter: RestaurantMenuPresentationLogic {
     
     func presentFetchedRestaurantMenuData(response: RestaurantMenuModel.FetchRestaurantMenuData.Response) {
         let sections = getSection(options: response.restaurantMenuData)
-        
         let viewModel = RestaurantMenuModel.FetchRestaurantMenuData.ViewModel(displayedSection: sections)
         viewController?.displayRestaurantMenuFetchedData(viewModel: viewModel)
     }
@@ -49,8 +49,7 @@ extension RestaurantMenuPresenter: RestaurantMenuPresentationLogic {
     }
     
     func presentOpenRestaurantMenuDetails(response: RestaurantMenuModel.OpenRestaurantMenuDetails.Response) {
-        let viewModel = RestaurantMenuModel.OpenRestaurantMenuDetails.ViewModel(restaurantMenuData: response.restaurantMenuData)
+        let viewModel = RestaurantMenuModel.OpenRestaurantMenuDetails.ViewModel(index: response.index, restaurantMenuData: response.restaurantMenuData)
         viewController?.displayRestaurantMenuOpenDetails(viewModel: viewModel)
     }
-    
 }

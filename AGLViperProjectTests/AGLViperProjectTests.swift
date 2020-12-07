@@ -9,25 +9,26 @@ import XCTest
 @testable import AGLViperProject
 
 class AGLViperProjectTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    override func setUp() {
+        super.setUp()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    override func tearDown() {
+        super.tearDown()
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testInitHomeScreenData() {
+        let data = HomeScreenData(title: "Foo", description: "Baz", imageName: "image", priceText: "100", header: nil, footer: nil)
+        XCTAssertNotNil(data)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testHomeScreenData() {
+        let data = HomeScreenData(title: "123", description: "123", imageName: "123", priceText: "123", header: nil, footer: nil)
+        
+        XCTAssertNil(data.header)
+        XCTAssertNotNil(data.priceText)
+        XCTAssertTrue(data.details == "123")
+        XCTAssertEqual(data.title, "123")
     }
-
 }

@@ -14,16 +14,18 @@ import UIKit
 
 protocol RestaurantDetailsBusinessLogic {
     func fetchRestaurantDetailsData(request: RestaurantDetailsModel.FetchRestaurantDetailsData.Request)
+    func setBasketData(request: RestaurantDetailsModel.SetBasketData.Request)
 }
 
 protocol RestaurantDetailsDataStore {
     var option: HomeScreenData? { get set }
+    var basket: BasketData? {get set }
 }
 
 class RestaurantDetailsInteractor: RestaurantDetailsDataStore {
     var presenter: RestaurantDetailsPresentationLogic?
     
-    private let worker: RestaurantDetailsWorker = RestaurantDetailsWorker()
+    private var worker: RestaurantDetailsWorker = RestaurantDetailsWorker()
     
     private var mutableOption: HomeScreenData?
     
@@ -33,6 +35,8 @@ class RestaurantDetailsInteractor: RestaurantDetailsDataStore {
             mutableOption = option
         }
     }
+    
+    var basket: BasketData?
     
     private var mode: ControllerMode = .viewing {
         didSet {
@@ -47,5 +51,28 @@ extension RestaurantDetailsInteractor: RestaurantDetailsBusinessLogic {
     func fetchRestaurantDetailsData(request: RestaurantDetailsModel.FetchRestaurantDetailsData.Request) {
         let response = RestaurantDetailsModel.FetchRestaurantDetailsData.Response(detailsData: self.mutableOption)
         self.presenter?.presentFetchedRestaurantDetailsData(response: response)
+    }
+    
+    func setBasketData(request: RestaurantDetailsModel.SetBasketData.Request) {
+        self.basket = BasketData(price: request.price, title: request.title, imageName: request.imageName, details: request.details, count: request.count)
+        let response = RestaurantDetailsModel.SetBasketData.Response(detailsData: self.basket!)
+        self.presenter?.presentSetedBasket(response: response)
+    }
+
+}
+
+// Use for Unit tests
+extension RestaurantDetailsInteractor {
+    
+    func getMutableOption() -> HomeScreenData {
+        return self.option!
+    }
+    
+    func setMutableOption(options: HomeScreenData) {
+        self.option = options
+    }
+    
+    func setDBWorker(dbWorker: RestaurantDetailsWorker) {
+        self.worker = dbWorker
     }
 }

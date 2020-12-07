@@ -15,6 +15,7 @@ import UIKit
 protocol RestaurantDetailsPresentationLogic {
     func presentRestaurantDetailsControllerMode(response: RestaurantDetailsModel.ChangeControllerMode.Response)
     func presentFetchedRestaurantDetailsData(response: RestaurantDetailsModel.FetchRestaurantDetailsData.Response)
+    func presentSetedBasket(response: RestaurantDetailsModel.SetBasketData.Response)
 }
 
 class RestaurantDetailsPresenter {
@@ -26,7 +27,7 @@ class RestaurantDetailsPresenter {
         
         var sections: [RestaurantDetailsModel.DisplayedSection] = []
         
-        let descriptionCell = RestaurantDetailsModel.DisplayedSection.DisplayedCell(type: .description(title: option.title, imageName: option.imageName, descriptionText: option.description, priceText: option.priceText, header: option.header, footer: option.footer))
+        let descriptionCell = RestaurantDetailsModel.DisplayedSection.DisplayedCell(type: .details(title: option.title, imageName: option.imageName, descriptionText: option.details, price: option.price,  priceText: option.priceText, header: option.header, footer: option.footer, count: option.count))
         
         let section = RestaurantDetailsModel.DisplayedSection(type: .details, cells: [descriptionCell])
         sections.append(section)
@@ -42,9 +43,13 @@ extension RestaurantDetailsPresenter: RestaurantDetailsPresentationLogic {
     }
     
     func presentFetchedRestaurantDetailsData(response: RestaurantDetailsModel.FetchRestaurantDetailsData.Response) {
-        let sections = getSection(option: response.detailsData)
-        
+        let sections = self.getSection(option: response.detailsData)
         let viewModel = RestaurantDetailsModel.FetchRestaurantDetailsData.ViewModel(displayedSection: sections)
         viewController?.displayRestaurantDetailsFetchedData(viewModel: viewModel)
+    }
+    
+    func presentSetedBasket(response: RestaurantDetailsModel.SetBasketData.Response) {
+        let viewModel = RestaurantDetailsModel.SetBasketData.ViewModel(detailsData: response.detailsData)
+        self.viewController?.displaySetedBasket(viewModel: viewModel)
     }
 }

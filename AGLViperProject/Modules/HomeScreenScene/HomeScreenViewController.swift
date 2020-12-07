@@ -92,7 +92,7 @@ class HomeScreenViewController: UIViewController {
         ]
         NSLayoutConstraint.activate(constraints)
         
-        openDetailsViewController(index: 0)////////
+        openDetailsViewController(index: 0)
     }
     
     private func openDetailsViewController(index: Int) {

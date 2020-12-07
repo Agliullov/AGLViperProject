@@ -22,7 +22,14 @@ class RestaurantMenuViewController: UIViewController {
     var interactor: RestaurantMenuBusinessLogic?
     var router: (NSObjectProtocol & RestaurantMenuRoutingLogic & RestaurantMenuDataPassing)?
     
-    private let collectionView: UICollectionView = {
+    var mutableHomeScreenData: [HomeScreenData] = []
+    private var homeScreenData: [HomeScreenData] = []
+    
+    private var mode: ControllerMode = .viewing
+    
+    private var displayedSections: [RestaurantMenuModel.DisplayedSection] = []
+    
+    let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height / 2)
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
@@ -34,8 +41,6 @@ class RestaurantMenuViewController: UIViewController {
         return collectionView
     }()
     
-    private var mode: ControllerMode = .viewing
-    
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -43,8 +48,6 @@ class RestaurantMenuViewController: UIViewController {
         indicator.startAnimating()
         return indicator
     }()
-    
-    private var displayedSections: [RestaurantMenuModel.DisplayedSection] = []
     
     // MARK: Object lifecycle
     
@@ -90,19 +93,12 @@ class RestaurantMenuViewController: UIViewController {
     private func titleTextAttribute() {
         self.title = "Наше меню"
         
-        UINavigationBar.appearance().barTintColor = UIColor.green
-        let textColorAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 21.0), NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textColorAttribute
-        
-        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"), style: .done, target: self, action: #selector(shopCartVC)), animated: true)
-        
+        navigationController?.navigationBar.titleTextAttributes = ColorHelper.shared.titleTextAttribute()
+        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"), style: .done, target: self, action: #selector(openAndDataFromBasketVC)), animated: true)
     }
     
-    @objc private func shopCartVC() {
-        let shopCartVC = ShopCartViewController()
-        let request = ShopCart.FetchShopCartData.Request()
-        shopCartVC.interactor?.openShopCartData(request: request)
-        navigationController?.pushViewController(shopCartVC, animated: true)
+    @objc private func openAndDataFromBasketVC() {
+        self.router?.routeToBasketVC()
     }
     
     private func fetchOptions() {
@@ -126,7 +122,6 @@ class RestaurantMenuViewController: UIViewController {
         let request = RestaurantMenuModel.OpenRestaurantMenuDetails.Request(index: index)
         interactor?.openRestaurantMenuDetails(request: request)
     }
-    
 }
 
 extension RestaurantMenuViewController: RestaurantMenuDisplayLogic {
@@ -142,14 +137,14 @@ extension RestaurantMenuViewController: RestaurantMenuDisplayLogic {
     }
     
     func displayRestaurantMenuOpenDetails(viewModel: RestaurantMenuModel.OpenRestaurantMenuDetails.ViewModel) {
-        self.router?.routeToRestaurantDetails(index: 6)///нужен индекс
+        self.router?.routeToRestaurantDetails(index: viewModel.index)
     }
 }
 
 extension RestaurantMenuViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        openRestaurantDetailsViewController(index: indexPath.section)
+        openRestaurantDetailsViewController(index: indexPath.item)
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
@@ -170,28 +165,27 @@ extension RestaurantMenuViewController: UICollectionViewDataSource {
         let cellType = displayedSection.cells[indexPath.row].type
         
         switch cellType {
-        case .description(title: let titleText, imageName: let imageName, descriptionText: let descriptionText, priceText: let priceText):
+        case .description(let title, let imageName, let descriptionText, let price, let priceText):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DetailsCollectionViewCell.self), for: indexPath) as! DetailsCollectionViewCell
-            cell.setupValue(titleText: titleText, imageName: imageName, descriptionText: descriptionText, priceText: priceText)
+            cell.setupValue(titleText: title, imageName: imageName, descriptionText: descriptionText,price: price, priceText: priceText)
             return cell
         }
     }
 }
 
-extension RestaurantMenuViewController: UICollectionViewDelegateFlowLayout {
+extension RestaurantMenuViewController: DetailsStructChange {
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            let reusableCell = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: TitleCollectionViewCell.self), for: indexPath) as! TitleCollectionViewCell
-            reusableCell.setup(headerText: "Пиццерия AGL")
-            return reusableCell
-        default:
-            fatalError("Not implemented")
-        }
+    func detailsValueDidChange(details: [HomeScreenData]?) {
+        guard let details = details else { return }
+        mutableHomeScreenData = details
     }
+}
+
+// Use for Unit tests
+extension RestaurantMenuViewController {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.bounds.width, height: 50.0)
+    func setSections(sections: [RestaurantMenuModel.DisplayedSection]) {
+        self.displayedSections = sections
+        self.collectionView.reloadData()
     }
 }

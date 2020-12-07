@@ -26,7 +26,7 @@ class ThirdSplashScreenPage: UIViewController {
         button.clipsToBounds = true
         button.backgroundColor = UIColor.gray
         button.tintColor = .white
-        button.setTitle("Сделать заказ", for: .normal)
+        button.setTitle("Вперед", for: .normal)
         return button
     }()
     
