@@ -14,7 +14,7 @@ import UIKit
 
 @objc protocol RestaurantMenuRoutingLogic {
     func routeToRestaurantDetails(index: Int)
-    
+    func routeToBasketVC()
 }
 
 protocol RestaurantMenuDataPassing {
@@ -28,15 +28,18 @@ class RestaurantMenuRouter: NSObject, RestaurantMenuDataPassing {
     
     // MARK: Navigation
     
-    func navigateToRestaurantDetails(source: RestaurantMenuViewController, destination: RestaurantDetailsViewController)
-    {
+    func navigateToRestaurantDetails(source: RestaurantMenuViewController, destination: RestaurantDetailsViewController) {
         source.navigationController?.pushViewController(destination, animated: true)
+    }
+    
+    func navigateToBasket(source: RestaurantMenuViewController, destination: BasketViewController) {
+        let navigationVC = UINavigationController(rootViewController: destination)
+        source.navigationController?.present(navigationVC, animated: true, completion: nil)
     }
     
     // MARK: Passing data
     
-    func passDataToRestaurantDetails(source: RestaurantMenuDataStore, destination: inout RestaurantDetailsDataStore, index: Int)
-    {
+    func passDataToRestaurantDetails(source: RestaurantMenuDataStore, destination: inout RestaurantDetailsDataStore, index: Int) {
         destination.option = source.restaurantMenuData?[index]
     }
 }
@@ -51,6 +54,13 @@ extension RestaurantMenuRouter: RestaurantMenuRoutingLogic {
         
         self.passDataToRestaurantDetails(source: sourceDataStore, destination: &destinationDataStore, index: index)
         self.navigateToRestaurantDetails(source: viewController, destination: detailsVC)
+    }
+    
+    func routeToBasketVC() {
+        guard let viewController = self.viewController else { return }
+        
+        let basketVC = BasketViewController()
+        self.navigateToBasket(source: viewController, destination: basketVC)
     }
     
 }

@@ -15,6 +15,11 @@ import UIKit
 protocol RestaurantDetailsDisplayLogic: class {
     func displayRestaurantDetailsControllerMode(viewModel: RestaurantDetailsModel.ChangeControllerMode.ViewModel)
     func displayRestaurantDetailsFetchedData(viewModel: RestaurantDetailsModel.FetchRestaurantDetailsData.ViewModel)
+    func displaySetedBasket(viewModel: RestaurantDetailsModel.SetBasketData.ViewModel)
+}
+
+protocol DetailsStructChange: class {
+    func detailsValueDidChange(details: [HomeScreenData]?)
 }
 
 class RestaurantDetailsViewController: UIViewController {
@@ -22,9 +27,11 @@ class RestaurantDetailsViewController: UIViewController {
     var interactor: RestaurantDetailsBusinessLogic?
     var router: (NSObjectProtocol & RestaurantDetailsRoutingLogic & RestaurantDetailsDataPassing)?
     
+    weak var delegate: DetailsStructChange?
+    
     private var mode: ControllerMode = .viewing
     
-    lazy var alertController: UIAlertController = UIAlertController()
+    private var displayedSections: [RestaurantDetailsModel.DisplayedSection] = []
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -34,7 +41,7 @@ class RestaurantDetailsViewController: UIViewController {
         return indicator
     }()
     
-    private let collectionView: UICollectionView = {
+    let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
@@ -44,8 +51,6 @@ class RestaurantDetailsViewController: UIViewController {
         collectionView.register(RestaurantDetailsView.self, forCellWithReuseIdentifier: String(describing: RestaurantDetailsView.self))
         return collectionView
     }()
-    
-    private var displayedSections: [RestaurantDetailsModel.DisplayedSection] = []
     
     // MARK: Object lifecycle
     
@@ -78,14 +83,21 @@ class RestaurantDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Описание"
         
         view.addSubview(collectionView)
         collectionView.frame = view.bounds
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        titleTextAttribute()
         fetchRestaurantDetailsData()
+    }
+    
+    private func titleTextAttribute() {
+        self.title = "Описание"
+        
+        navigationController?.navigationBar.titleTextAttributes = ColorHelper.shared.titleTextAttribute()
+        navigationItem.setRightBarButton(UIBarButtonItem(image: UIImage(systemName: "refresh"), style: .done, target: self, action: nil), animated: true)
     }
     
     private func fetchRestaurantDetailsData() {
@@ -104,6 +116,11 @@ class RestaurantDetailsViewController: UIViewController {
             navigationItem.setRightBarButton(rightItem, animated: true)
         }
     }
+    
+    private func setBasketToDataSource(title: String, imageName: String, details: String, price: Int32, priceText: String, count: Int32) {
+        let request = RestaurantDetailsModel.SetBasketData.Request(title: title, imageName: imageName, details: details, price: price, priceText: priceText, count: count)
+        self.interactor?.setBasketData(request: request)
+    }
 }
 
 extension RestaurantDetailsViewController: RestaurantDetailsDisplayLogic {
@@ -117,6 +134,21 @@ extension RestaurantDetailsViewController: RestaurantDetailsDisplayLogic {
         displayedSections = viewModel.displayedSection
         collectionView.reloadData()
     }
+    
+    func displaySetedBasket(viewModel: RestaurantDetailsModel.SetBasketData.ViewModel) {
+       // CoreDataService.shared.saveBasketDataInCoreData(arr) { (basketArray) in
+       //     print(basketArray)
+       // }
+        
+        DataSource.shared.setBasketObject(viewModel.detailsData)
+        
+        let alertVC = UIAlertController(title: "Добавлено", message: "Товар в корзине", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Продолжить покупки", style: .default, handler: nil)
+        //let basketAction = UIAlertAction(title: "Перейти в корзину", style: .default, handler: nil)
+        alertVC.addAction(okAction)
+        //alertVC.addAction(basketAction)
+        self.present(alertVC, animated: true, completion: nil)
+    }
 }
 
 extension RestaurantDetailsViewController: UICollectionViewDelegate {
@@ -124,7 +156,6 @@ extension RestaurantDetailsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
-    
 }
 
 extension RestaurantDetailsViewController: UICollectionViewDataSource {
@@ -139,10 +170,22 @@ extension RestaurantDetailsViewController: UICollectionViewDataSource {
         let cellType = displayedSection.cells[indexPath.row].type
         
         switch cellType {
-        case .description(title: let title, imageName: let imageName, descriptionText: let description, priceText: let priceText, header: let header, footer: let footer):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: RestaurantDetailsView.self), for: indexPath) as! RestaurantDetailsView
-            cell.setupValue(titleText: title, imageName: imageName, descriptionText: description, priceText: priceText, headerText: header, footerText: footer)
+        case .details(let title, let imageName, let details, let price, let priceText, let header, let footer, let count):
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: RestaurantDetailsView.self), for: indexPath) as? RestaurantDetailsView else { return UICollectionViewCell() }
+            cell.setupValue(titleText: title, imageName: imageName, descriptionText: details, price: price,  priceText: priceText, headerText: header, footerText: footer)
+            cell.complitionHandler = { [weak self] in
+                self?.setBasketToDataSource(title: title, imageName: imageName, details: details, price: price, priceText: priceText, count: count ?? 0)
+            }
             return cell
         }
+    }
+}
+
+// Use for Unit tests
+extension RestaurantDetailsViewController {
+    
+    func setSections(sections: [RestaurantDetailsModel.DisplayedSection]) {
+        displayedSections = sections
+        collectionView.reloadData()
     }
 }

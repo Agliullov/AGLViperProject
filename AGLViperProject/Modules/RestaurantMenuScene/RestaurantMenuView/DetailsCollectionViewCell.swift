@@ -47,6 +47,16 @@ class DetailsCollectionViewCell: UICollectionViewCell {
         return title
     }()
     
+    private let priceTextLabel: UILabel = {
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.textColor = .black
+        title.font = UIFont.systemFont(ofSize: 17.0)
+        title.textAlignment = .center
+        title.numberOfLines = 1
+        return title
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initialSetup()
@@ -58,12 +68,13 @@ class DetailsCollectionViewCell: UICollectionViewCell {
     }
     
     fileprivate func initialSetup() {
-        contentView.backgroundColor = UIColor.white//////
+        contentView.backgroundColor = UIColor.white
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(centerImage)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(priceLabel)
+        contentView.addSubview(priceTextLabel)
         
         let constraints: [NSLayoutConstraint] = [
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8.0),
@@ -82,20 +93,28 @@ class DetailsCollectionViewCell: UICollectionViewCell {
             
             priceLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8.0),
             priceLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 4.0),
-            contentView.rightAnchor.constraint(equalTo: priceLabel.rightAnchor, constant: 4.0),
-            contentView.bottomAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 4.0)
+            contentView.bottomAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 4.0),
+            
+            priceTextLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8.0),
+            priceTextLabel.leftAnchor.constraint(equalTo: priceLabel.rightAnchor, constant: 4.0),
+            contentView.rightAnchor.constraint(equalTo: priceTextLabel.rightAnchor, constant: 4.0),
+            contentView.bottomAnchor.constraint(equalTo: priceTextLabel.bottomAnchor, constant: 4.0)
         ]
         
         NSLayoutConstraint.activate(constraints)
     }
     
-    func setupValue(titleText: String, imageName: String, descriptionText: String, priceText: String) {
+    func setupValue(titleText: String, imageName: String, descriptionText: String, price: Int32, priceText: String) {
         titleLabel.text = titleText
+        
         if let image = UIImage(named: imageName) {
             centerImage.image = image
         }
         descriptionLabel.text = descriptionText
         
-        priceLabel.text = priceText
+        priceLabel.text = "\(price)"
+        
+        priceTextLabel.text = priceText
+        
     }
 }

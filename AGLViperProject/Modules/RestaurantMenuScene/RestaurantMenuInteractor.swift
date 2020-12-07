@@ -26,7 +26,7 @@ class RestaurantMenuInteractor: RestaurantMenuDataStore {
     
     var presenter: RestaurantMenuPresentationLogic?
     
-    private let worker: RestaurantMenuWorker = RestaurantMenuWorker()
+    private var worker: RestaurantMenuWorker = RestaurantMenuWorker()
     
     private var mode: ControllerMode = .viewing {
         didSet {
@@ -47,8 +47,25 @@ extension RestaurantMenuInteractor: RestaurantMenuBusinessLogic {
         worker.getLocalRestaurantMenuData { (restaurantMenuData) in
             guard let data = restaurantMenuData?[request.index] else { return }
             
-            let response = RestaurantMenuModel.OpenRestaurantMenuDetails.Response(restaurantMenuData: data)
+            let response = RestaurantMenuModel.OpenRestaurantMenuDetails.Response(index: request.index, restaurantMenuData: data)
             self.presenter?.presentOpenRestaurantMenuDetails(response: response)
         }
     }
 }
+
+// Use for Unit tests
+extension RestaurantMenuInteractor {
+    
+    func getMutableOption() -> [HomeScreenData] {
+        return self.restaurantMenuData ?? []
+    }
+    
+    func setMutableOption(options: [HomeScreenData]) {
+        self.restaurantMenuData = options
+    }
+    
+    func setDBWorker(dbWorker: RestaurantMenuWorker) {
+        self.worker = dbWorker
+    }
+}
+

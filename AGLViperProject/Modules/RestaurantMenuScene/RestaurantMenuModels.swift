@@ -24,7 +24,7 @@ enum RestaurantMenuModel {
         
         struct DisplayedCell: Equatable {
             enum CellType: Equatable {
-                case description(title: String, imageName: String, descriptionText: String, priceText: String)
+                case description(title: String, imageName: String, descriptionText: String, price: Int32, priceText: String)
             }
             
             let type: CellType
@@ -37,7 +37,6 @@ enum RestaurantMenuModel {
     
     enum FetchRestaurantMenuData {
         struct Request {
-
         }
         
         struct Response {
@@ -55,17 +54,18 @@ enum RestaurantMenuModel {
         }
         
         struct Response {
+            let index: Int
             let restaurantMenuData: HomeScreenData
         }
         
         struct ViewModel {
+            let index: Int
             let restaurantMenuData: HomeScreenData
         }
     }
     
     enum ChangeControllerMode {
         struct Request {
-            
         }
         
         struct Response {
