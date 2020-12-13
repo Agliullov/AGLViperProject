@@ -32,6 +32,7 @@ class BasketViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.allowsSelection = false
         tableView.register(BasketDetailsCell.self, forCellReuseIdentifier: String(describing: BasketDetailsCell.self))
+        tableView.register(BasketDetailsCellOrderButton.self, forCellReuseIdentifier: String(describing: BasketDetailsCellOrderButton.self))
         return tableView
     }()
     
@@ -167,6 +168,12 @@ extension BasketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: BasketDetailsCell.self), for: indexPath) as! BasketDetailsCell
                 
                 cell.setup(imageName: imageName, name: name, details: details, price: price)
+                return cell
+            case .orderButton(_):
+                let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: BasketDetailsCellOrderButton.self), for: indexPath) as! BasketDetailsCellOrderButton
+                cell.orderButtonHandler = {
+                    print("string")
+                }
                 return cell
             }
         } else {

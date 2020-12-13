@@ -30,6 +30,11 @@ class BasketPresenter {
             cells.append(descriptionCell)
         }
         
+        if !cells.isEmpty {
+            let orderCell = BasketModel.DisplayedSection.DisplayedCell(type: .orderButton(""))
+            cells.append(orderCell)
+        }
+        
         let section = BasketModel.DisplayedSection(type: .basket, cells: cells)
         return [section]
     }

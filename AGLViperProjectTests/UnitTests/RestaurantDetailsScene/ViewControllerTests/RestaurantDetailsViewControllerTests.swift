@@ -35,8 +35,8 @@ class RestaurantDetailsViewControllerTests: XCTestCase {
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        let firstCell = RestaurantDetailsModel.DisplayedSection.DisplayedCell(type: .details(title: "FirstTitle", imageName: "FirstSkip", descriptionText: "FirstText", priceText: "FirstPrice", header: nil, footer: nil))
-        let secondCell = RestaurantDetailsModel.DisplayedSection.DisplayedCell(type: .details(title: "SecondTitle", imageName: "SecondSkip", descriptionText: "SecondText", priceText: "SecondPrice", header: nil, footer: nil))
+        let firstCell = RestaurantDetailsModel.DisplayedSection.DisplayedCell(type: .details(title: "TestTitle", imageName: "TestImage", descriptionText: "TestDetails", price: 12, priceText: "TestPrice", header: nil, footer: nil, count: 5))
+        let secondCell = RestaurantDetailsModel.DisplayedSection.DisplayedCell(type: .details(title: "SecondTitle", imageName: "SecondSkip", descriptionText: "SecondText", price: 55, priceText: "SecondPrice", header: nil, footer: nil, count: 10))
         
         let section = RestaurantDetailsModel.DisplayedSection(type: .details, cells: [firstCell, secondCell])
         self.displayedSections.append(section)

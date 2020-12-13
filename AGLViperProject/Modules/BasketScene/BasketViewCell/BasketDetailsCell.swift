@@ -44,17 +44,6 @@ class BasketDetailsCell: UITableViewCell {
         return label
     }()
     
-    private let orderButton: UIButton = {
-       let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Оплатить", for: .normal)
-        button.layer.cornerRadius = 7.0
-        button.clipsToBounds = true
-        button.backgroundColor = UIColor.gray
-        button.tintColor = .white
-        return button
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         initialSetup()
@@ -69,7 +58,6 @@ class BasketDetailsCell: UITableViewCell {
         contentView.addSubview(mainImage)
         contentView.addSubview(detailsLabel)
         contentView.addSubview(priceLabel)
-       // contentView.addSubview(orderButton)
         
         let constraints: [NSLayoutConstraint] = [
             
@@ -90,11 +78,8 @@ class BasketDetailsCell: UITableViewCell {
             priceLabel.leftAnchor.constraint(equalTo: mainImage.rightAnchor, constant: 8.0),
             contentView.rightAnchor.constraint(equalTo: priceLabel.rightAnchor, constant: 8.0),
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 8.0)
-            
-//            orderButton.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 8.0),
-//            orderButton.leftAnchor.constraint(equalTo: mainImage.leftAnchor, constant: 8.0),
-//            contentView.rightAnchor.constraint(equalTo: orderButton.rightAnchor, constant: 8.0)
         ]
+        
         NSLayoutConstraint.activate(constraints)
     }
     

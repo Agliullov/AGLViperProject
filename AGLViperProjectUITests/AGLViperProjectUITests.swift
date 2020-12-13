@@ -29,7 +29,6 @@ class AGLViperProjectUITests: XCTestCase {
     
     func testRefreshControll() {
         app.buttons["Сделать заказ"].tap()
-       // app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .collectionView).element.swipeDown()
     }
     
     func testMenuShowDissmiss() {

@@ -39,6 +39,8 @@ class RestaurantMenuInteractor: RestaurantMenuDataStore {
 extension RestaurantMenuInteractor: RestaurantMenuBusinessLogic {
     
     func fetchRestaurantMenuData(request: RestaurantMenuModel.FetchRestaurantMenuData.Request) {
+        let test = CoreDataService.shared.fetchBasketDataFromCoreData()
+        print(test!)
         let response = RestaurantMenuModel.FetchRestaurantMenuData.Response(restaurantMenuData: self.restaurantMenuData ?? [])
         self.presenter?.presentFetchedRestaurantMenuData(response: response)
     }

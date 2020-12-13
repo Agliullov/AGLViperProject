@@ -144,9 +144,12 @@ extension RestaurantDetailsViewController: RestaurantDetailsDisplayLogic {
         
         let alertVC = UIAlertController(title: "Добавлено", message: "Товар в корзине", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Продолжить покупки", style: .default, handler: nil)
-        //let basketAction = UIAlertAction(title: "Перейти в корзину", style: .default, handler: nil)
+        let basketAction = UIAlertAction(title: "Перейти в корзину", style: .default) {[weak self] _ in
+            self?.dismiss(animated: true, completion: nil)
+            self?.router?.routeToBasketVC()
+        }
         alertVC.addAction(okAction)
-        //alertVC.addAction(basketAction)
+        alertVC.addAction(basketAction)
         self.present(alertVC, animated: true, completion: nil)
     }
 }

@@ -24,7 +24,7 @@ class RestaurantInteractorTests: XCTestCase {
         self.interactor = homeInteractor
         self.presenter = homePresenter
         
-        let option = HomeScreenData(title: "Title", description: "Description", imageName: "ImageName", priceText: "Price", header: nil, footer: nil)
+        let option = HomeScreenData(title: "Title", details: "Description", imageName: "ImageName", price: 55, priceText: "Price", header: nil, footer: nil, count: 0)
         self.options.append(option)
         
         self.interactor.restaurantMenuData = self.options
