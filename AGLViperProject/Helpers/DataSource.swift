@@ -25,7 +25,7 @@ class DataSource: NSObject {
             arrayObject.append(value)
         }
         
-        let data = try? NSKeyedArchiver.archivedData(withRootObject: arrayObject, requiringSecureCoding: true)
+        guard let data = try? NSKeyedArchiver.archivedData(withRootObject: arrayObject, requiringSecureCoding: false) else { return }
         
         UserDefaults.standard.setValue(data, forKey: BASKET_OBJECT_FOR_USER_DEFAULTS)
     }

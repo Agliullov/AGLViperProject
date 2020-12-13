@@ -19,12 +19,12 @@ class AGLViperProjectTests: XCTestCase {
     }
     
     func testInitHomeScreenData() {
-        let data = HomeScreenData(title: "Foo", description: "Baz", imageName: "image", priceText: "100", header: nil, footer: nil)
+        let data = HomeScreenData(title: "FirstTest", details: "FirstDetailsTest", imageName: "pizzaImage", price: 888, priceText: "TestText", header: nil, footer: nil, count: nil)
         XCTAssertNotNil(data)
     }
     
     func testHomeScreenData() {
-        let data = HomeScreenData(title: "123", description: "123", imageName: "123", priceText: "123", header: nil, footer: nil)
+        let data = HomeScreenData(title: "123", details: "123", imageName: "123", price: 125, priceText: "123", header: nil, footer: nil, count: nil)
         
         XCTAssertNil(data.header)
         XCTAssertNotNil(data.priceText)

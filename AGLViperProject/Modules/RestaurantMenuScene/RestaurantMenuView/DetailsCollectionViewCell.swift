@@ -81,8 +81,6 @@ class DetailsCollectionViewCell: UICollectionViewCell {
             titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 4.0),
             contentView.rightAnchor.constraint(equalTo: titleLabel.rightAnchor, constant: 4.0),
             
-            centerImage.heightAnchor.constraint(equalToConstant: screenFrame.height / 2),
-            centerImage.widthAnchor.constraint(equalToConstant: screenFrame.width),
             centerImage.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4.0),
             centerImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 4.0),
             contentView.rightAnchor.constraint(equalTo: centerImage.rightAnchor, constant: 4.0),
@@ -102,6 +100,9 @@ class DetailsCollectionViewCell: UICollectionViewCell {
         ]
         
         NSLayoutConstraint.activate(constraints)
+        
+        contentView.layer.cornerRadius = 15.0
+        contentView.clipsToBounds = true
     }
     
     func setupValue(titleText: String, imageName: String, descriptionText: String, price: Int32, priceText: String) {
@@ -115,6 +116,8 @@ class DetailsCollectionViewCell: UICollectionViewCell {
         priceLabel.text = "\(price)"
         
         priceTextLabel.text = priceText
-        
+     
+        setNeedsLayout()
+        layoutIfNeeded()
     }
 }

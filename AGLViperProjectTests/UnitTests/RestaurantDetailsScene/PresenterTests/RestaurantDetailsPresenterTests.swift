@@ -24,7 +24,7 @@ class RestaurantDetailsPresenterTests: XCTestCase {
         self.presenter = homePresenter
         self.viewController = homeViewController
         
-        let option = HomeScreenData(title: "Title", description: "Description", imageName: "ImageName", priceText: "Price", header: nil, footer: nil)
+        let option = HomeScreenData(title: "Title3", details: "Details3", imageName: "pizz3", price: 821, priceText: "RUR", header: nil, footer: nil, count: 3)
         self.options = option
     }
     

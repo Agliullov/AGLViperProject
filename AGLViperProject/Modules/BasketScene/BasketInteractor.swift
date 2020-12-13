@@ -41,12 +41,7 @@ class BasketInteractor: BasketDataStore {
 extension BasketInteractor: BasketBusinessLogic {
     
     func fetchBasketData(request: BasketModel.FetchBasketData.Request) {
-        //let basketObject = DataSource.shared.getBasketObject()
-        
-        let basketObject: [BasketData] = [
-            BasketData(price: 125, title: "First", imageName: "pizz1", details: "qwerty", count: 1),
-            BasketData(price: 555, title: "Second", imageName: "pizz2", details: "asdfgh", count: 4)
-        ]
+        let basketObject = DataSource.shared.getBasketObject()
         
         let response = BasketModel.FetchBasketData.Response(detailsData: basketObject)
         self.presenter?.presentBasketFetchedData(response: response)

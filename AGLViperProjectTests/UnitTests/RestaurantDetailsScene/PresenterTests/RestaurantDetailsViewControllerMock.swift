@@ -10,6 +10,11 @@ import Foundation
 
 final class RestaurantDetailsViewControllerMock: RestaurantDetailsDisplayLogic {
     
+    func displaySetedBasket(viewModel: RestaurantDetailsModel.SetBasketData.ViewModel) {
+        
+    }
+    
+    
     private(set) var isCalledDisplayRestaurantDetailsFetchedData = false
     
     func displayRestaurantDetailsControllerMode(viewModel: RestaurantDetailsModel.ChangeControllerMode.ViewModel) {

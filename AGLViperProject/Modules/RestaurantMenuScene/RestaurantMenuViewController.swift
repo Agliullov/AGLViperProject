@@ -31,11 +31,14 @@ class RestaurantMenuViewController: UIViewController {
     
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = CGSize(width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height / 2)
+        let size = UIScreen.main.bounds.size.width / 2 - 10
+       // layout.estimatedItemSize = CGSize(width: UIScreen.main.bounds.size.width / 2, height: UIScreen.main.bounds.size.height / 2)
+        layout.itemSize = CGSize(width: size, height: size)
+       // layout.sectionInset = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        collectionView.backgroundColor = UIColor.white
+        collectionView.backgroundColor = UIColor.secondarySystemBackground
         collectionView.register(TitleCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: String(describing: TitleCollectionViewCell.self))
         collectionView.register(DetailsCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: DetailsCollectionViewCell.self))
         return collectionView
@@ -178,6 +181,17 @@ extension RestaurantMenuViewController: DetailsStructChange {
     func detailsValueDidChange(details: [HomeScreenData]?) {
         guard let details = details else { return }
         mutableHomeScreenData = details
+    }
+}
+
+extension RestaurantMenuViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if section == 0 {
+            return UIEdgeInsets(top: 8.0, left: 4.0, bottom: 8.0, right: 4.0)
+        } else {
+            return UIEdgeInsets()
+        }
     }
 }
 

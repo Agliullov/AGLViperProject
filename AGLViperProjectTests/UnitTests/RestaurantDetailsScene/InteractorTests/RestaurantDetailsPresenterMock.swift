@@ -16,6 +16,10 @@ final class RestaurantDetailsPresenterMock: RestaurantDetailsPresentationLogic {
         
     }
     
+    func presentSetedBasket(response: RestaurantDetailsModel.SetBasketData.Response) {
+        
+    }
+    
     func presentFetchedRestaurantDetailsData(response: RestaurantDetailsModel.FetchRestaurantDetailsData.Response) {
         self.isCalledPresentFetchedRestaurantDetailsData = true
     }

@@ -24,6 +24,7 @@ enum BasketModel {
         struct DisplayedCell: Equatable {
             enum CellType: Equatable {
                 case details(imageName: String, name: String, details: String, price: Int32)
+                case orderButton(_: String)
             }
             let type: CellType
         }
